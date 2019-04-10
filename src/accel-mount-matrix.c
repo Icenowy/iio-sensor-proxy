@@ -40,6 +40,16 @@ setup_mount_matrix (GUdevDevice *device)
 		g_clear_pointer (&ret, g_free);
 	}
 
+	mount_matrix = g_udev_device_get_sysfs_attr (device, "in_accel_mount_matrix");
+	if (mount_matrix) {
+		if (parse_mount_matrix (mount_matrix, &ret))
+			return ret;
+
+		g_warning ("Failed to parse mount_matrix ('%s') from sysfs",
+			   mount_matrix);
+		g_clear_pointer (&ret, g_free);
+	}
+
 	mount_matrix = g_udev_device_get_sysfs_attr (device, "mount_matrix");
 	if (mount_matrix) {
 		if (parse_mount_matrix (mount_matrix, &ret))
